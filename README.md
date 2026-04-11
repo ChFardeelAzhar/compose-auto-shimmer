@@ -24,7 +24,7 @@
 
 **ShimmerBox**
 
-![ShimmerBox Demo](media/shimmer_box.gif)
+![ShimmerBox Demo](media/shimmer_placeholder.gif)
 
 </td>
 <td align="center" width="33%">
@@ -38,7 +38,7 @@
 
 **ShimmerPlaceholder**
 
-![ShimmerPlaceholder Demo](media/shimmer_placeholder.gif)
+![ShimmerPlaceholder Demo](media/shimmer_box.gif)
 
 </td>
 </tr>

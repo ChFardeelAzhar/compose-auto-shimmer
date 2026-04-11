@@ -3,7 +3,10 @@ package com.example.composeautoshimmer.components
 import androidx.compose.animation.core.AnimationVector
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -11,8 +14,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.example.composeautoshimmer.LocalShimmerActive
 import com.example.composeautoshimmer.LocalShimmerConfig
 import com.example.composeautoshimmer.core.rememberShimmerState
 import kotlin.math.PI
@@ -51,24 +56,26 @@ fun ShimmerBox(
     // to make backgrounds transparent. This allows our silhouette engine
     // to "see through" Cards/Surfaces to find the text and icons inside.
     val currentColorScheme = MaterialTheme.colorScheme
-    val skeletonColorScheme = remember(isLoading, currentColorScheme) {
+    val skeletonColorScheme = remember(isLoading, currentColorScheme, baseColor) {
         if (isLoading) {
+            val trackColor = baseColor.copy(alpha = 0.2f)
             currentColorScheme.copy(
-                surface = Color.Transparent,
-                surfaceVariant = Color.Transparent,
-                primaryContainer = Color.Transparent,
-                secondaryContainer = Color.Transparent,
-                tertiaryContainer = Color.Transparent,
-                surfaceContainer = Color.Transparent,
-                surfaceContainerHigh = Color.Transparent,
-                surfaceContainerHighest = Color.Transparent,
-                surfaceContainerLow = Color.Transparent,
-                surfaceContainerLowest = Color.Transparent,
-                // Ensure text/icons remain visible to the silhouette filter
-                onSurface = highlightColor,
-                onSurfaceVariant = highlightColor,
-                onPrimaryContainer = highlightColor,
-                outline = highlightColor
+                background = Color.Transparent, // Keep screen background clean
+                surface = trackColor,
+                surfaceVariant = trackColor,
+                primaryContainer = trackColor,
+                secondaryContainer = trackColor,
+                tertiaryContainer = trackColor,
+                surfaceContainer = trackColor,
+                surfaceContainerHigh = trackColor,
+                surfaceContainerHighest = trackColor,
+                surfaceContainerLow = trackColor,
+                surfaceContainerLowest = trackColor,
+                // Ensure text/icons remain visible as strong bars
+                onSurface = baseColor,
+                onSurfaceVariant = baseColor,
+                onPrimaryContainer = baseColor,
+                outline = baseColor
             )
         } else {
             currentColorScheme
@@ -113,7 +120,7 @@ fun ShimmerBox(
                             drawContext.canvas.restore()
 
                             // Step 3: Draw the glossy shimmer sweep using BlendMode.SrcIn
-                            // This ensures the WHITE glint only appears ON TOP of the grey shapes
+                            // This ensures the glint only appears ON TOP of the grey shapes
                             drawRect(
                                 brush = Brush.linearGradient(
                                     colors = listOf(
@@ -136,10 +143,33 @@ fun ShimmerBox(
                 }
             )
     ) {
-        // Apply the optimized ColorScheme for Skeleton generation
-        MaterialTheme(colorScheme = skeletonColorScheme) {
+        // Apply the optimized ColorScheme and Typography for Skeleton generation
+        val currentTypography = MaterialTheme.typography
+        val skeletonTypography = remember(isLoading, currentTypography, baseColor) {
+            if (isLoading) currentTypography.skeletonize(baseColor) else currentTypography
+        }
+
+        MaterialTheme(
+            colorScheme = skeletonColorScheme,
+            typography = skeletonTypography
+        ) {
+            val currentTextStyle = LocalTextStyle.current
+            val skeletonTextStyle = remember(isLoading, currentTextStyle, baseColor) {
+                if (isLoading) {
+                    currentTextStyle.copy(
+                        color = Color.Transparent,
+                        background = baseColor.copy(alpha = 0.2f)
+                    )
+                } else {
+                    currentTextStyle
+                }
+            }
+
             // Also override tonal elevation to 0 to prevent blocky shadows
             CompositionLocalProvider(
+                LocalShimmerActive provides isLoading,
+                LocalTextStyle provides skeletonTextStyle,
+                LocalContentColor provides if (isLoading) baseColor else LocalContentColor.current,
                 androidx.compose.material3.LocalAbsoluteTonalElevation provides 0.dp
             ) {
                 content()
@@ -154,4 +184,28 @@ fun ShimmerBox(
 @Composable
 private fun <T, V : AnimationVector> androidx.compose.animation.core.Animatable<T, V>.asState(): State<T> {
     return remember(this) { derivedStateOf { value } }
+}
+
+/**
+ * Skeletonizes a Typography object by making all text transparent and giving it a background color.
+ */
+private fun Typography.skeletonize(backgroundColor: Color): Typography {
+    val skeletonStyle = TextStyle(color = Color.Transparent, background = backgroundColor)
+    return copy(
+        displayLarge = displayLarge.merge(skeletonStyle),
+        displayMedium = displayMedium.merge(skeletonStyle),
+        displaySmall = displaySmall.merge(skeletonStyle),
+        headlineLarge = headlineLarge.merge(skeletonStyle),
+        headlineMedium = headlineMedium.merge(skeletonStyle),
+        headlineSmall = headlineSmall.merge(skeletonStyle),
+        titleLarge = titleLarge.merge(skeletonStyle),
+        titleMedium = titleMedium.merge(skeletonStyle),
+        titleSmall = titleSmall.merge(skeletonStyle),
+        bodyLarge = bodyLarge.merge(skeletonStyle),
+        bodyMedium = bodyMedium.merge(skeletonStyle),
+        bodySmall = bodySmall.merge(skeletonStyle),
+        labelLarge = labelLarge.merge(skeletonStyle),
+        labelMedium = labelMedium.merge(skeletonStyle),
+        labelSmall = labelSmall.merge(skeletonStyle)
+    )
 }

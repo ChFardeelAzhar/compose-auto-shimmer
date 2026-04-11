@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 object ShimmerDefaults {
 
     /** Base color of the shimmer skeleton background */
-    val BaseColor = Color(0xFFD3D3D3)
+    val BaseColor = Color(0xFFBDBDBD)
 
     /** Highlight color — the bright sweep that creates the shimmer effect */
     val HighlightColor = Color(0xFFF8F7F7)

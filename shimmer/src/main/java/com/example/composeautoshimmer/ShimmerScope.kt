@@ -1,9 +1,18 @@
 package com.example.composeautoshimmer
 
+import androidx.compose.foundation.background
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.composeautoshimmer.core.ShimmerDefaults
@@ -32,6 +41,69 @@ data class ShimmerConfig(
  * [CompositionLocal] used to provide [ShimmerConfig] down the hierarchy.
  */
 val LocalShimmerConfig = staticCompositionLocalOf { ShimmerConfig() }
+
+/**
+ * [CompositionLocal] used to track if a [ShimmerBox] is currently in the loading state.
+ * Useful for conditional styling in custom components.
+ */
+val LocalShimmerActive = compositionLocalOf { false }
+
+/**
+ * A specialized background modifier that becomes transparent when a [ShimmerBox] 
+ * is in the loading state. Use this for top-level containers and cards to ensure 
+ * the auto-shimmer engine can "see through" to the content inside.
+ *
+ * @param color The background color to show when NOT shimmering.
+ * @param shape The shape of the background.
+ */
+fun Modifier.shimmerBackground(
+    color: Color,
+    shape: Shape = RectangleShape
+): Modifier = this.then(
+    Modifier.composed {
+        val active = LocalShimmerActive.current
+        if (active) {
+            // Match the Theme-level 20% track alpha for consistency
+            background(LocalShimmerConfig.current.baseColor.copy(alpha = 0.2f), shape)
+        } else {
+            background(color, shape)
+        }
+    }
+)
+
+/**
+ * A modifier that transforms its content into a solid shimmering shape 
+ * (like a circle or square) when a [ShimmerBox] is in the loading state.
+ * This is the recommended way to handle Icons in your shimmer layout.
+ *
+ * @param shape The shape of the skeleton bar/block.
+ */
+fun Modifier.shimmerPlaceholder(
+    shape: Shape = RectangleShape
+): Modifier = this.then(
+    Modifier.composed {
+        val active = LocalShimmerActive.current
+        if (active) {
+            this.graphicsLayer { alpha = 0f }
+                .background(LocalShimmerConfig.current.highlightColor, shape)
+        } else {
+            this
+        }
+    }
+)
+
+/**
+ * Convenience modifier to turn an Icon or component into a shimmering circular block.
+ */
+fun Modifier.shimmerCircle(): Modifier = shimmerPlaceholder(androidx.compose.foundation.shape.CircleShape)
+
+/**
+ * Convenience modifier to turn an Icon or component into a shimmering square/rectangular block.
+ *
+ * @param cornerRadius The corner radius of the rectangle.
+ */
+fun Modifier.shimmerSquare(cornerRadius: Dp = 4.dp): Modifier = 
+    shimmerPlaceholder(androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius))
 
 /**
  * A wrapper composable that provides [ShimmerConfig] via [LocalShimmerConfig].

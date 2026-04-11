@@ -20,36 +20,32 @@
 
 <table>
 <tr>
-<td align="center" width="25%">
+<td align="center" width="33%">
 
-**Auto Capture**
-![pulse animation](https://raw.githubusercontent.com/fardeelazhar/compose-auto-shimmer/main/media/auto_shimmer_demo.gif)
+**ShimmerBox**
 
-</td>
-<td align="center" width="25%">
-
-**Morphological Icons**
-![shimmer animation](https://raw.githubusercontent.com/fardeelazhar/compose-auto-shimmer/main/media/icon_filling.gif)
+![ShimmerBox Demo](media/shimmer_box.gif)
 
 </td>
-<td align="center" width="25%">
+<td align="center" width="33%">
 
-**Filtering Engine**
-![shimmer overlay effect](https://raw.githubusercontent.com/fardeelazhar/compose-auto-shimmer/main/media/rounded_corners.gif)
+**ShimmerOverlay**
+
+![ShimmerOverlay Demo](media/shimmer_overlay.gif)
 
 </td>
-<td align="center" width="25%">
+<td align="center" width="33%">
 
 **ShimmerPlaceholder**
-![shimmer placeholder effect](https://raw.githubusercontent.com/fardeelazhar/compose-auto-shimmer/main/media/shimmer_placeholder.gif)
+
+![ShimmerPlaceholder Demo](media/shimmer_placeholder.gif)
 
 </td>
 </tr>
 <tr>
-<td align="center">Auto-captured from live UI</td>
-<td align="center">Icons fill into solid blocks</td>
-<td align="center">High-fidelity filtered edges</td>
-<td align="center">Fixed-size boxes</td>
+<td align="center">Auto wrapper — zero manual work</td>
+<td align="center">Sweep over any element</td>
+<td align="center">Fixed-size skeleton boxes</td>
 </tr>
 </table>
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="app/src/main/res/drawable/native_auto_shimmer.gif" alt="compose-auto-shimmer" width="420" />
+<img src="media/native_auto_shimmer.gif" alt="compose-auto-shimmer" width="420" />
 
 # Compose Auto Shimmer
 
@@ -240,8 +240,6 @@ Check your `baseColor`. If the contrast is too low, the morphological filter mig
 
 Absolutely. Since it's just a Composable, you can wrap your list items or the entire list. It handles item recycling perfectly.
 </details>
-
----
 
 ---
 

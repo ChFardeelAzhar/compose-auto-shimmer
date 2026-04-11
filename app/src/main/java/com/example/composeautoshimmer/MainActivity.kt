@@ -13,7 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -83,6 +86,7 @@ fun ShimmerDemoScreen(modifier: Modifier = Modifier) {
 
         HorizontalDivider()
 
+
         // Demo 1: ShimmerBox wrapping a User Profile Card
         DemoSection(title = "1. ShimmerBox (Content Wrapper)") {
             ShimmerBox(isLoading = isLoading) {
@@ -98,22 +102,83 @@ fun ShimmerDemoScreen(modifier: Modifier = Modifier) {
                         .fillMaxWidth()
                         .height(160.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                        .background(MaterialTheme.colorScheme.onSurface),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                    )
-                    Text(
-                        "Image / Banner Placeholder",
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(12.dp),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        ShimmerOverlay(isLoading) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+
+                                Badge {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(5.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Star,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(25.dp),
+                                            tint = Color.Yellow
+                                        )
+                                        Text("Kotlin")
+                                    }
+                                }
+                                Badge {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(5.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Favorite,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(25.dp),
+                                            tint = Color.Red
+                                        )
+                                        Text("Android")
+                                    }
+                                }
+                                Badge {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(5.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.CheckCircle,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(25.dp),
+                                            tint = Color.Green
+                                        )
+                                        Text("Compose")
+                                    }
+                                }
+                            }
+
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = Color.Red
+                            )
+                            Text(
+                                "Thi is Compose Auto Shimmer",
+                                modifier = Modifier
+                                    .padding(2.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.Blue
+                            )
+                        }
+
+
+                    }
+
                 }
             }
         }
@@ -126,7 +191,7 @@ fun ShimmerDemoScreen(modifier: Modifier = Modifier) {
                 RealContent()
             }
         }
-        
+
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
@@ -135,8 +200,8 @@ fun ShimmerDemoScreen(modifier: Modifier = Modifier) {
 fun DemoSection(title: String, content: @Composable () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = title, 
-            style = MaterialTheme.typography.labelLarge, 
+            text = title,
+            style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
         content()
@@ -173,9 +238,9 @@ fun UserProfileCard() {
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(20.dp))
-            
+
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 // These text lines will be detected as shimmering bars automatically
                 Text(
@@ -188,7 +253,7 @@ fun UserProfileCard() {
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Badge { Text("Kotlin") }
                     Badge { Text("Compose") }
@@ -248,12 +313,12 @@ fun RealContent() {
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Performance Metrics", 
+                    text = "Performance Metrics",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "Updated 2 mins ago", 
+                    text = "Updated 2 mins ago",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
